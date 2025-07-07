@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base reset and globals */
+:root {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Dark mode support via Tailwind 'class' strategy */
+html.dark {
+    color-scheme: dark;
+}
+
+body {
+    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen antialiased;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-bold leading-tight;
+}
+
+/* Paragraph */
+p {
+    @apply mb-4;
+}
+
+/* Links */
+a {
+    @apply text-blue-600 underline hover:text-blue-800;
+}
+
+/* Buttons (optional, override as needed) */
+button {
+    @apply px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition;
+}
+
+/* Input fields */
+input,
+select,
+textarea {
+    @apply border rounded px-3 py-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring focus:ring-blue-300;
+}
