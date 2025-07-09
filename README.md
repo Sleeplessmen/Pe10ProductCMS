@@ -5,7 +5,7 @@ Một hệ thống quản lý sản phẩm chuyên nghiệp bao gồm:
 - Xác thực người dùng với JWT
 - Phân quyền (Admin / User)
 - CRUD sản phẩm
-- Tìm kiếm theo tên và khoảng giá
+- Tìm kiếm theo tên cài đặt phía server
 - Phân trang phía server
 - Giao diện hỗ trợ dark mode
 - Triển khai backend lên Render
@@ -15,7 +15,7 @@ Một hệ thống quản lý sản phẩm chuyên nghiệp bao gồm:
 
 | Thành phần | Công nghệ                            |
 | ---------- | ------------------------------------ |
-| Frontend   | ReactJS (Vite, Context API)          |
+| Frontend   | ReactJS                              |
 | Backend    | Node.js + Sails.js                   |
 | Database   | MongoDB                              |
 | Auth       | JSON Web Token (JWT)                 |
@@ -28,7 +28,7 @@ Một hệ thống quản lý sản phẩm chuyên nghiệp bao gồm:
 ### 1. Clone dự án
 
 ```bash
-git clone https://github.com/Sleeplessmen/Pe10ProductCMS.git
+git clone https://github.com/Sleeplessmen/Pe10ProductCMS.git product-cms
 cd product-cms
 ```
 
@@ -92,7 +92,7 @@ Frontend sẽ chạy tại: `http://localhost:5173`
 1. Truy cập [Vercel](https://vercel.com)
 2. Import repository chứa thư mục `frontend/`
 3. Cấu hình:
-   - Framework: **Vite**
+   - Build tool: **Vite**
    - Root directory: `frontend`
    - Build Command: `npm run build`
    - Output Directory: `dist`
@@ -103,7 +103,6 @@ Frontend sẽ chạy tại: `http://localhost:5173`
 ## Hướng phát triển tiếp theo
 
 - Upload ảnh sản phẩm (Cloudinary)
-- Thêm danh mục sản phẩm
 - Responsive đầy đủ mobile/tablet
 - Xuất danh sách sản phẩm ra Excel
 - Đa ngôn ngữ (i18n)

@@ -10,13 +10,16 @@
 
 module.exports.policies = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Default policy for all controllers and actions, unless overridden.       *
-  * (`true` allows public access)                                            *
-  *                                                                          *
-  ***************************************************************************/
+    /***************************************************************************
+    *                                                                          *
+    * Default policy for all controllers and actions, unless overridden.       *
+    * (`true` allows public access)                                            *
+    *                                                                          *
+    ***************************************************************************/
 
-  // '*': true,
+    '*': true, // mặc định mở
+    ProductController: {
+        '*': ['isAuthenticated', 'isAdmin'], // tất cả thao tác với sản phẩm yêu cầu admin
+    }
 
 };
