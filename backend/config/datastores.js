@@ -1,6 +1,6 @@
 module.exports.datastores = {
     default: {
         adapter: 'sails-mongo',
-        url: process.env.MONGO_URI,
+        url: 'mongodb+srv://khaibka1109:loveyouanymore@cluster0.xnnqhkd.mongodb.net/productcms?retryWrites=true&w=majority&appName=Cluster0',
     },
 };

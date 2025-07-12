@@ -1,9 +1,16 @@
 module.exports = async function (req, res, proceed) {
-    if (!req.me) {
-        return res.forbidden('Chưa đăng nhập');
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ error: 'Bạn cần đăng nhập.' });
     }
-    if (req.me.role !== 'admin') {
-        return res.forbidden('Chỉ admin được phép');
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key');
+        if (decoded.role !== 'admin') {
+            return res.status(403).json({ error: 'Bạn không có quyền truy cập.' });
+        }
+        req.user = decoded;
+        return proceed();
+    } catch (err) {
+        return res.status(403).json({ error: err.message + 'Token không hợp lệ.' });
     }
-    return proceed();
 };

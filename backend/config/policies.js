@@ -1,25 +1,12 @@
-/**
- * Policy Mappings
- * (sails.config.policies)
- *
- * Policies are simple functions which run **before** your actions.
- *
- * For more information on configuring policies, check out:
- * https://sailsjs.com/docs/concepts/policies
- */
-
 module.exports.policies = {
+    AuthController: {
+        '*': true
+    },
 
-    /***************************************************************************
-    *                                                                          *
-    * Default policy for all controllers and actions, unless overridden.       *
-    * (`true` allows public access)                                            *
-    *                                                                          *
-    ***************************************************************************/
-
-    '*': true, // mặc định mở
-    ProductController: {
-        '*': ['isAuthenticated', 'isAdmin'], // tất cả thao tác với sản phẩm yêu cầu admin
-    }
-
+    // ProductController: {
+    //     find: 'requireAuth',
+    //     create: 'isAdmin',
+    //     update: 'isAdmin',
+    //     delete: 'isAdmin'
+    // }
 };
