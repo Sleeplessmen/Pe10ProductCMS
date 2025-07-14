@@ -3,6 +3,42 @@ const { DEFAULT_PAGE, DEFAULT_LIMIT, MAX_LIMIT } = require('../../config/constan
 const Joi = require('joi');
 
 module.exports = {
+    /**
+     * @swagger
+     * /products:
+     *   get:
+     *     summary: Lấy danh sách sản phẩm (có tìm kiếm và phân trang)
+     *     tags:
+     *       - Products
+     *     parameters:
+     *       - name: search
+     *         in: query
+     *         required: false
+     *         description: Từ khoá tìm kiếm theo tên sản phẩm
+     *         schema:
+     *           type: string
+     *       - name: page
+     *         in: query
+     *         required: false
+     *         description: Số trang (bắt đầu từ 1)
+     *         schema:
+     *           type: integer
+     *           default: 1
+     *       - name: limit
+     *         in: query
+     *         required: false
+     *         description: Số sản phẩm mỗi trang
+     *         schema:
+     *           type: integer
+     *           default: 10
+     *     responses:
+     *       200:
+     *         description: Lấy danh sách sản phẩm thành công
+     *       400:
+     *         description: Tham số truy vấn không hợp lệ
+     *       500:
+     *         description: Lỗi server
+     */
     findAll: async (req, res) => {
         try {
             const schema = Joi.object({
@@ -51,6 +87,30 @@ module.exports = {
         }
     },
 
+    /**
+     * @swagger
+     * /products/{id}:
+     *   get:
+     *     summary: Lấy chi tiết sản phẩm theo ID
+     *     tags:
+     *       - Products
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         required: true
+     *         description: ID của sản phẩm
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Lấy sản phẩm thành công
+     *       400:
+     *         description: ID không hợp lệ
+     *       404:
+     *         description: Không tìm thấy sản phẩm
+     *       500:
+     *         description: Lỗi server
+     */
     findOne: async (req, res) => {
         try {
             const schema = Joi.object({
@@ -90,6 +150,37 @@ module.exports = {
         }
     },
 
+    /**
+     * @swagger
+     * /products:
+     *   post:
+     *     summary: Tạo sản phẩm mới
+     *     tags:
+     *       - Products
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             required:
+     *               - name
+     *               - price
+     *             properties:
+     *               name:
+     *                 type: string
+     *               price:
+     *                 type: number
+     *               description:
+     *                 type: string
+     *     responses:
+     *       201:
+     *         description: Tạo sản phẩm thành công
+     *       400:
+     *         description: Dữ liệu gửi lên không hợp lệ
+     *       500:
+     *         description: Lỗi khi tạo sản phẩm
+     */
     create: async (req, res) => {
         try {
             const schema = Joi.object({
@@ -123,6 +214,43 @@ module.exports = {
         }
     },
 
+    /**
+     * @swagger
+     * /products/{id}:
+     *   put:
+     *     summary: Cập nhật thông tin sản phẩm
+     *     tags:
+     *       - Products
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         required: true
+     *         description: ID của sản phẩm cần cập nhật
+     *         schema:
+     *           type: string
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *               price:
+     *                 type: number
+     *               description:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Cập nhật thành công
+     *       400:
+     *         description: Dữ liệu không hợp lệ
+     *       404:
+     *         description: Không tìm thấy sản phẩm
+     *       500:
+     *         description: Lỗi server
+     */
     update: async (req, res) => {
         try {
             const paramSchema = Joi.object({
@@ -177,6 +305,30 @@ module.exports = {
         }
     },
 
+    /**
+     * @swagger
+     * /products/{id}:
+     *   delete:
+     *     summary: Xoá sản phẩm theo ID
+     *     tags:
+     *       - Products
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         required: true
+     *         description: ID sản phẩm cần xoá
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Xoá thành công
+     *       400:
+     *         description: ID không hợp lệ
+     *       404:
+     *         description: Không tìm thấy sản phẩm
+     *       500:
+     *         description: Lỗi server
+     */
     delete: async (req, res) => {
         try {
             const schema = Joi.object({

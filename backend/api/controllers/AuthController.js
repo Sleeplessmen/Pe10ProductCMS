@@ -4,6 +4,43 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 
 module.exports = {
+    /**
+     * @swagger
+     * /auth/register:
+     *   post:
+     *     summary: Đăng ký tài khoản mới
+     *     tags:
+     *       - Auth
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             required:
+     *               - email
+     *               - password
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 format: email
+     *               password:
+     *                 type: string
+     *                 minLength: 6
+     *               role:
+     *                 type: string
+     *                 enum: [user, admin]
+     *                 default: user
+     *     responses:
+     *       201:
+     *         description: Đăng ký thành công
+     *       400:
+     *         description: Dữ liệu không hợp lệ
+     *       409:
+     *         description: Email đã được đăng ký
+     *       500:
+     *         description: Lỗi server trong quá trình đăng ký
+     */
     register: async (req, res) => {
         try {
             const schema = Joi.object({
@@ -51,6 +88,43 @@ module.exports = {
         }
     },
 
+    /**
+     * @swagger
+     * /auth/login:
+     *   post:
+     *     summary: Đăng nhập
+     *     tags:
+     *       - Auth
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             required:
+     *               - email
+     *               - password
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 format: email
+     *               password:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Đăng nhập thành công
+     *         headers:
+     *           Set-Cookie:
+     *             description: Cookie chứa JWT token
+     *             schema:
+     *               type: string
+     *       400:
+     *         description: Dữ liệu không hợp lệ
+     *       401:
+     *         description: Email hoặc mật khẩu không chính xác
+     *       500:
+     *         description: Lỗi server trong quá trình đăng nhập
+     */
     login: async (req, res) => {
         try {
             const schema = Joi.object({
@@ -113,6 +187,19 @@ module.exports = {
         }
     },
 
+    /**
+     * @swagger
+     * /auth/logout:
+     *   post:
+     *     summary: Đăng xuất
+     *     tags:
+     *       - Auth
+     *     responses:
+     *       200:
+     *         description: Đăng xuất thành công
+     *       500:
+     *         description: Lỗi server trong quá trình đăng xuất
+     */
     logout: async (req, res) => {
         try {
             res.clearCookie('token', {
