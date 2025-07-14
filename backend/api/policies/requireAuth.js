@@ -1,17 +1,12 @@
-const jwt = require('jsonwebtoken');
+// policies/requireAuth.js
+const verifyToken = require('../../utils/verifyToken');
 
 module.exports = async function (req, res, proceed) {
-    const token = req.cookies.token;
-
-    if (!token) {
-        return res.status(401).json({ error: 'Bạn cần đăng nhập để truy cập' });
-    }
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key');
+        const decoded = verifyToken(req);
         req.user = decoded;
         return proceed();
     } catch (err) {
-        return res.status(403).json({ error: err.message + 'Token không hợp lệ hoặc đã hết hạn' });
+        return res.status(err.status || 401).json({ success: false, error: err.message });
     }
 };

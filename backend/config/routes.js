@@ -4,8 +4,9 @@ module.exports.routes = {
     '/': { view: 'pages/homepage' },
 
     // Auth routes
-    'POST /api/register': 'AuthController.register',
-    'POST /api/login': 'AuthController.login',
+    'POST /api/auth/register': 'AuthController.register',
+    'POST /api/auth/login': 'AuthController.login',
+    'POST /api/auth/logout': 'AuthController.logout',
 
     // Product routes
     'GET    /api/products': 'ProductController.findAll',
