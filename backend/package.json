@@ -1,9 +1,14 @@
 {
     "name": "backend",
     "private": true,
-    "version": "0.0.0",
-    "description": "a Sails application",
-    "keywords": [],
+    "version": "1.0.0",
+    "description": "A Sails backend API",
+    "scripts": {
+        "start": "NODE_ENV=production sails lift",
+        "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+        "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+        "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+    },
     "dependencies": {
         "@sailshq/connect-redis": "^6.1.3",
         "@sailshq/lodash": "^3.10.6",
@@ -27,20 +32,8 @@
     "devDependencies": {
         "eslint": "5.16.0"
     },
-    "scripts": {
-        "start": "NODE_ENV=production node app.js",
-        "test": "npm run lint && npm run custom-tests && echo 'Done.'",
-        "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
-        "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
-    },
-    "main": "app.js",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/anonymous node/sails user/backend.git"
-    },
-    "author": "anonymous node/sails user",
-    "license": "",
     "engines": {
-        "node": "^22.16"
-    }
+        "node": ">=16 <21"
+    },
+    "license": "MIT"
 }

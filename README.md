@@ -9,7 +9,7 @@ Một hệ thống quản lý sản phẩm chuyên nghiệp bao gồm:
 - Phân trang phía server
 - Giao diện hỗ trợ dark mode
 - Triển khai backend lên Render
-- Tài liệu API với Swagger
+- Tài liệu API với Swagger Template
 
 ## Công nghệ sử dụng
 
@@ -76,18 +76,19 @@ Frontend sẽ chạy tại: `http://localhost:5173`
 
 #### Backend (Sails.js) - Render
 
-1. Tạo service mới trên [Render](https://render.com)
+1. Tạo Web Service mới trên [Render](https://render.com)
 2. Kết nối git repository backend
 3. Cấu hình:
-   - Build Command: `npm install && npm run build`
+   - Build Command: `npm install`
    - Start Command: `npm start`
    - Env Vars:
      - `MONGO_URI`
      - `JWT_SECRET`
-     - `PORT=10000` (hoặc để mặc định của Render)
+     - `NODE_ENV`
+     - `PORT` (hoặc để mặc định của Render)
 | ⚠️ Nhớ bật CORS trong cấu hình Sails để cho phép domain frontend truy cập API.
 
-### Frontend - Vercel
+#### Frontend - Vercel
 
 1. Truy cập [Vercel](https://vercel.com)
 2. Import repository chứa thư mục `frontend/`
