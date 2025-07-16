@@ -5,19 +5,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-        match: [/.+@.+\..+/, 'Email không hợp lệ']
+        match: [/.+@.+\..+/, 'Email không hợp lệ'],
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role',
+        required: true
     }
-}, {
-    timestamps: true
-});
+},
+    {
+        timestamps: true,
+    }
+);
 
 module.exports = mongoose.model('User', userSchema);

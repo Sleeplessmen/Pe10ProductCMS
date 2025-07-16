@@ -19,13 +19,11 @@
         "grunt": "1.0.4",
         "joi": "^17.13.3",
         "jsonwebtoken": "^9.0.2",
-        "mongodb": "^6.17.0",
         "mongoose": "^8.16.3",
         "sails": "^1.5.14",
         "sails-hook-grunt": "^5.0.0",
         "sails-hook-orm": "^4.0.3",
         "sails-hook-sockets": "^3.0.0",
-        "sails-mongo": "^2.1.2",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.1"
     },

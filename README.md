@@ -118,7 +118,7 @@ Frontend sẽ chạy tại: `http://localhost:5173`
 
 4. Deploy và kiểm tra
    - Sau khi Render deploy xong, bạn sẽ nhận được một URL dạng: https://your-backend.onrender.com
-   - Truy cập thử: https://your-backend.onrender.com/api/v1/product
+   - Truy cập thử: https://your-backend.onrender.com/api/v1/products
 
 5. Kết nối frontend
    - Trong thư mục frontend, tạo file `.env.production` với:

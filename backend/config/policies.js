@@ -1,18 +1,41 @@
+const hasPermission = require('../api/policies/hasPermission');
+
 module.exports.policies = {
-    // Cho phép truy cập tự do với AuthController (đăng ký, đăng nhập)
+    // Cho phép truy cập tự do cho AuthController (đăng ký, đăng nhập, đăng xuất)
     AuthController: {
-        '*': true
+        '*': true,
     },
 
-    // Áp dụng bảo vệ JWT cho ProductController
+    // --- Sản phẩm ---
     ProductController: {
-        // ✅ Yêu cầu đăng nhập cho tất cả hành động
         '*': 'requireAuth',
 
-        // ✅ Chỉ admin mới có thể thực hiện các hành động thay đổi dữ liệu
-        create: 'isAdmin',
-        update: 'isAdmin',
-        delete: 'isAdmin',
+        create: hasPermission('create_product'),
+        update: hasPermission('update_product'),
+        delete: hasPermission('delete_product'),
+        findAll: hasPermission('read_product'),
+        findOne: hasPermission('read_product'),
+    },
 
-    }
+    // --- Page Config CMS ---
+    PageConfigController: {
+        '*': 'requireAuth',
+
+        create: hasPermission('create_page'),
+        update: hasPermission('update_page'),
+        delete: hasPermission('delete_page'),
+        findAll: hasPermission('view_cms_dashboard'),
+        findOne: hasPermission('view_cms_dashboard'),
+    },
+
+    // // --- Role / RBAC ---
+    // RoleController: {
+    //     '*': 'requireAuth',
+
+    //     create: hasPermission('manage_roles'),
+    //     update: hasPermission('manage_roles'),
+    //     delete: hasPermission('manage_roles'),
+    //     findAll: hasPermission('manage_roles'),
+    //     findOne: hasPermission('manage_roles'),
+    // },
 };

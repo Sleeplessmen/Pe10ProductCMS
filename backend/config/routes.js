@@ -4,16 +4,28 @@ module.exports.routes = {
     '/': { view: 'pages/homepage' },
 
     // Auth routes
-    'POST /api/auth/register': 'AuthController.register',
-    'POST /api/auth/login': 'AuthController.login',
-    'POST /api/auth/logout': 'AuthController.logout',
+    'POST /api/v1/auth/register': 'AuthController.register',
+    'POST /api/v1/auth/login': 'AuthController.login',
+    'POST /api/v1/auth/logout': 'AuthController.logout',
 
     // Product routes
-    'GET    /api/products': 'ProductController.findAll',
-    'GET    /api/products/:id': 'ProductController.findOne',
-    'POST   /api/products': 'ProductController.create',
-    'PUT    /api/products/:id': 'ProductController.update',
-    'DELETE /api/products/:id': 'ProductController.delete',
+    'GET    /api/v1/products': 'ProductController.findAll',
+    'GET    /api/v1/products/:id': 'ProductController.findOne',
+    'POST   /api/v1/products': 'ProductController.create',
+    'PUT    /api/v1/products/:id': 'ProductController.update',
+    'DELETE /api/v1/products/:id': 'ProductController.delete',
 
-    // (Thêm middleware xác thực nếu có)
+    // Page Config API
+    'GET    /api/v1/page-configs': 'PageConfigController.findAll',
+    'GET    /api/v1/page-configs/:slug': 'PageConfigController.findOne',
+    'POST   /api/v1/page-configs': 'PageConfigController.create',
+    'PUT    /api/v1/page-configs/:slug': 'PageConfigController.update',
+    'DELETE /api/v1/page-configs/:slug': 'PageConfigController.delete',
+
+    // // Role routes
+    // 'GET    /api/v1/roles': 'RoleController.findAll',
+    // 'GET    /api/v1/roles/:id': 'RoleController.findOne',
+    // 'POST   /api/v1/roles': 'RoleController.create',
+    // 'PUT    /api/v1/roles/:id': 'RoleController.update',
+    // 'DELETE /api/v1/roles/:id': 'RoleController.delete',
 };
