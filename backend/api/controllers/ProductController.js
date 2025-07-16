@@ -5,7 +5,7 @@ const Joi = require('joi');
 module.exports = {
     /**
      * @swagger
-     * /products:
+     * api/v1/products:
      *   get:
      *     summary: Lấy danh sách sản phẩm (có tìm kiếm và phân trang)
      *     tags:
@@ -89,7 +89,7 @@ module.exports = {
 
     /**
      * @swagger
-     * /products/{id}:
+     * api/v1/products/{id}:
      *   get:
      *     summary: Lấy chi tiết sản phẩm theo ID
      *     tags:
@@ -152,7 +152,7 @@ module.exports = {
 
     /**
      * @swagger
-     * /products:
+     * api/v1/products:
      *   post:
      *     summary: Tạo sản phẩm mới
      *     tags:
@@ -216,7 +216,7 @@ module.exports = {
 
     /**
      * @swagger
-     * /products/{id}:
+     * api/v1/products/{id}:
      *   put:
      *     summary: Cập nhật thông tin sản phẩm
      *     tags:
@@ -307,7 +307,7 @@ module.exports = {
 
     /**
      * @swagger
-     * /products/{id}:
+     * api/v1/products/{id}:
      *   delete:
      *     summary: Xoá sản phẩm theo ID
      *     tags:

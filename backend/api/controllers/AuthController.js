@@ -1,52 +1,80 @@
 const User = require('../mongoose-models/User');
+const Role = require('../mongoose-models/Role');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 
 module.exports = {
     /**
-     * @swagger
-     * /auth/register:
-     *   post:
-     *     summary: Đăng ký tài khoản mới
-     *     tags:
-     *       - Auth
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             required:
-     *               - email
-     *               - password
-     *             properties:
-     *               email:
-     *                 type: string
-     *                 format: email
-     *               password:
-     *                 type: string
-     *                 minLength: 6
-     *               role:
-     *                 type: string
-     *                 enum: [user, admin]
-     *                 default: user
-     *     responses:
-     *       201:
-     *         description: Đăng ký thành công
-     *       400:
-     *         description: Dữ liệu không hợp lệ
-     *       409:
-     *         description: Email đã được đăng ký
-     *       500:
-     *         description: Lỗi server trong quá trình đăng ký
-     */
+    * @swagger
+    * api/v1/auth/register:
+    *   post:
+    *     summary: Đăng ký tài khoản mới
+    *     tags:
+    *       - Auth
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             type: object
+    *             required:
+    *               - email
+    *               - password
+    *             properties:
+    *               email:
+    *                 type: string
+    *                 format: email
+    *                 example: user@example.com
+    *               password:
+    *                 type: string
+    *                 minLength: 6
+    *                 example: 123456
+    *               role:
+    *                 type: string
+    *                 description: ID của role (user hoặc admin)
+    *                 example: 64b78ae1c1d2a0a4b7395f99
+    *     responses:
+    *       201:
+    *         description: Đăng ký thành công
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 success:
+    *                   type: boolean
+    *                   example: true
+    *                 message:
+    *                   type: string
+    *                   example: Đăng ký thành công
+    *                 data:
+    *                   type: object
+    *                   properties:
+    *                     user:
+    *                       type: object
+    *                       properties:
+    *                         _id:
+    *                           type: string
+    *                         email:
+    *                           type: string
+    *                         roles:
+    *                           type: array
+    *                           items:
+    *                             type: string
+    *       400:
+    *         description: Dữ liệu không hợp lệ
+    *       409:
+    *         description: Email đã được đăng ký
+    *       500:
+    *         description: Lỗi server trong quá trình đăng ký
+    */
     register: async (req, res) => {
         try {
             const schema = Joi.object({
                 email: Joi.string().email().required(),
                 password: Joi.string().min(6).required(),
-                role: Joi.string().valid('user', 'admin').default('user')
+                role: Joi.string().valid('user', 'admin').default('user') // chỉ dùng để tra role từ DB
             });
 
             const { error, value } = schema.validate(req.body);
@@ -60,6 +88,7 @@ module.exports = {
 
             const { email, password, role } = value;
 
+            // Kiểm tra email đã tồn tại chưa
             const existing = await User.findOne({ email });
             if (existing) {
                 return res.status(409).json({
@@ -68,14 +97,35 @@ module.exports = {
                 });
             }
 
+            // Tìm Role tương ứng
+            const roleDoc = await Role.findOne({ name: role });
+            if (!roleDoc) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Vai trò ${role} không tồn tại`
+                });
+            }
+
+            // Tạo user
             const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = new User({ email, password: hashedPassword, role });
+            const newUser = new User({
+                email,
+                password: hashedPassword,
+                roles: [roleDoc._id] // gán _id của role
+            });
+
             await newUser.save();
 
             return res.status(201).json({
                 success: true,
                 message: 'Đăng ký thành công',
-                data: { user: newUser }
+                data: {
+                    user: {
+                        _id: newUser._id,
+                        email: newUser.email,
+                        role: roleDoc.name
+                    }
+                }
             });
 
         } catch (err) {
@@ -90,7 +140,7 @@ module.exports = {
 
     /**
      * @swagger
-     * /auth/login:
+     * api/v1/auth/login:
      *   post:
      *     summary: Đăng nhập
      *     tags:
@@ -110,6 +160,7 @@ module.exports = {
      *                 format: email
      *               password:
      *                 type: string
+     *                 minLength: 6
      *     responses:
      *       200:
      *         description: Đăng nhập thành công
@@ -118,6 +169,38 @@ module.exports = {
      *             description: Cookie chứa JWT token
      *             schema:
      *               type: string
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 success:
+     *                   type: boolean
+     *                   example: true
+     *                 message:
+     *                   type: string
+     *                   example: Đăng nhập thành công
+     *                 data:
+     *                   type: object
+     *                   properties:
+     *                     user:
+     *                       type: object
+     *                       properties:
+     *                         _id:
+     *                           type: string
+     *                         email:
+     *                           type: string
+     *                         roles:
+     *                           type: array
+     *                           items:
+     *                             type: object
+     *                             properties:
+     *                               _id:
+     *                                 type: string
+     *                               name:
+     *                                 type: string
+     *                     token:
+     *                       type: string
      *       400:
      *         description: Dữ liệu không hợp lệ
      *       401:
@@ -143,7 +226,8 @@ module.exports = {
 
             const { email, password } = value;
 
-            const user = await User.findOne({ email });
+            // Tìm user và populate role
+            const user = await User.findOne({ email }).populate('roles');
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -159,8 +243,10 @@ module.exports = {
                 });
             }
 
+            const roleName = user.roles && user.roles[0] && user.roles[0].name || 'user';
+
             const token = jwt.sign(
-                { id: user._id, role: user.role },
+                { id: user._id, role: roleName },
                 process.env.JWT_SECRET || 'secret_key',
                 { expiresIn: '2d' }
             );
@@ -175,8 +261,16 @@ module.exports = {
             return res.status(200).json({
                 success: true,
                 message: 'Đăng nhập thành công',
-                data: { user, token }
+                data: {
+                    user: {
+                        _id: user._id,
+                        email: user.email,
+                        role: roleName
+                    },
+                    token
+                }
             });
+
         } catch (error) {
             sails.log.error('[AuthController.login] Lỗi:', error);
             return res.status(500).json({
@@ -189,7 +283,7 @@ module.exports = {
 
     /**
      * @swagger
-     * /auth/logout:
+     * api/v1/auth/logout:
      *   post:
      *     summary: Đăng xuất
      *     tags:

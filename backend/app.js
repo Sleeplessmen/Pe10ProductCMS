@@ -7,7 +7,7 @@
 
 process.chdir(__dirname);
 
-require('dotenv').config(); // Load biến môi trường nếu có
+require('./config/env');
 
 const sails = require('sails');
 const rc = require('sails/accessible/rc');

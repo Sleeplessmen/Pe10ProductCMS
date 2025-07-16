@@ -1,27 +1,20 @@
-// config/bootstrap.js
-const mongoose = require('mongoose');
-require('dotenv').config(); // đảm bảo biến môi trường được load
+const connectMongo = require('../services/connectMongo');
 
-module.exports.bootstrap = async function () {
-    const uri = process.env.MONGO_URI;
+module.exports.bootstrap = function (done) {
+    (async () => {
+        try {
+            await connectMongo();
 
-    if (!uri) {
-        sails.log.error('❌ Thiếu MONGO_URI trong file .env');
-        process.exit(1);
-    }
+            if (process.env.NODE_ENV === 'development') {
+                // sails.log('🔧 Đang seed dữ liệu...');
+                // await require('../seeds/seedPermissions')();
+                // sails.log('🌱 Đã seed xong dữ liệu');
+            }
 
-    try {
-        await mongoose.connect(uri);
-        sails.log('✅ Kết nối MongoDB (Mongoose) thành công');
-
-        // 👉 Tự động seed dữ liệu khi ở môi trường development
-        if (process.env.NODE_ENV === 'development') {
-            await require('../seeds/seedAll')(); // hoặc từng seed riêng nếu muốn
-            sails.log('🌱 Đã seed dữ liệu cho môi trường development');
+            return done(); // ✅ báo cho Sails biết đã xong bootstrap
+        } catch (err) {
+            sails.log.error('❌ Bootstrap error:', err.message);
+            return done(err); // báo lỗi
         }
-
-    } catch (err) {
-        sails.log.error('❌ Không kết nối được MongoDB:', err.message);
-        process.exit(1);
-    }
+    })(); // gọi IIFE async
 };
