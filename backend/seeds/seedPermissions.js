@@ -4,12 +4,6 @@ module.exports = async function () {
     console.time('SeedPermissions');
     sails.log('🔧 Đang chạy seedPermissions.js...');
 
-    const existing = await Permission.countDocuments();
-    if (existing > 0) {
-        sails.log('⚠️ Permission đã tồn tại. Bỏ qua seed.');
-        return;
-    }
-
     const permissions = [
         // CRUD sản phẩm
         { name: 'create_product', description: 'Tạo sản phẩm' },
@@ -28,22 +22,19 @@ module.exports = async function () {
         { name: 'delete_page', description: 'Xoá page CMS' },
         { name: 'view_cms_dashboard', description: 'Xem giao diện CMS' },
 
-        // // Role & Permission
+        // Role & Permission
         { name: 'manage_roles', description: 'Quản lý role và quyền' },
-        // { name: 'assign_role', description: 'Gán role cho người dùng' },
     ];
 
     try {
-        sails.log('🧹 Đang xoá permission cũ...');
         await Permission.deleteMany({});
-        sails.log('🧹 Đã xoá xong');
+        sails.log('🧹 Đã xoá toàn bộ permission cũ');
 
-        sails.log('📥 Đang insert mới...');
-        const created = await Permission.insertMany(permissions, { ordered: false });
+        const created = await Permission.insertMany(permissions);
         sails.log(`✅ Đã tạo ${created.length} permissions`);
     } catch (err) {
-        console.error('❌ Lỗi khi seed permissions:', err.stack || err.message);
-        throw err; // 🚨 Quan trọng
+        sails.log.error('❌ Lỗi khi seed permissions:', err.stack || err.message);
+        throw err;
     }
 
     console.timeEnd('SeedPermissions');

@@ -5,9 +5,9 @@ module.exports = (permissionName) => {
         try {
             const userId = req.user.id;
 
-            // Lấy user cùng với role và permission
+            // Truy vấn user và populate role + permissions
             const user = await User.findById(userId).populate({
-                path: 'roles',
+                path: 'role',
                 populate: {
                     path: 'permissions',
                     model: 'Permission'
@@ -18,7 +18,12 @@ module.exports = (permissionName) => {
                 return res.status(401).json({ message: 'Unauthorized' });
             }
 
-            const userPermissions = user.roles.flatMap(role => role.permissions.map(p => p.name));
+            const role = user.role;
+            if (!role || !Array.isArray(role.permissions)) {
+                return res.status(403).json({ message: 'Bạn không có quyền truy cập.' });
+            }
+
+            const userPermissions = role.permissions.map(p => p.name);
             const hasPermission = userPermissions.includes(permissionName);
 
             if (!hasPermission) {

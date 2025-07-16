@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 
 module.exports = {
+    // chua sua comment cho api doc
     /**
     * @swagger
     * api/v1/auth/register:
@@ -74,7 +75,7 @@ module.exports = {
             const schema = Joi.object({
                 email: Joi.string().email().required(),
                 password: Joi.string().min(6).required(),
-                role: Joi.string().valid('user', 'admin').default('user') // chỉ dùng để tra role từ DB
+                role: Joi.string().valid('user', 'editor').default('user') // dùng để tra role từ DB
             });
 
             const { error, value } = schema.validate(req.body);
@@ -88,7 +89,7 @@ module.exports = {
 
             const { email, password, role } = value;
 
-            // Kiểm tra email đã tồn tại chưa
+            // Kiểm tra email đã tồn tại
             const existing = await User.findOne({ email });
             if (existing) {
                 return res.status(409).json({
@@ -97,21 +98,21 @@ module.exports = {
                 });
             }
 
-            // Tìm Role tương ứng
+            // Lấy role từ DB
             const roleDoc = await Role.findOne({ name: role });
             if (!roleDoc) {
                 return res.status(400).json({
                     success: false,
-                    message: `Vai trò ${role} không tồn tại`
+                    message: `Vai trò '${role}' không tồn tại`
                 });
             }
 
-            // Tạo user
+            // Băm password và tạo user mới
             const hashedPassword = await bcrypt.hash(password, 10);
             const newUser = new User({
                 email,
                 password: hashedPassword,
-                roles: [roleDoc._id] // gán _id của role
+                role: roleDoc._id // ✅ Cập nhật đúng theo schema mới
             });
 
             await newUser.save();
@@ -226,8 +227,8 @@ module.exports = {
 
             const { email, password } = value;
 
-            // Tìm user và populate role
-            const user = await User.findOne({ email }).populate('roles');
+            // ✅ Tìm user và populate role (số ít)
+            const user = await User.findOne({ email }).populate('role');
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -243,7 +244,7 @@ module.exports = {
                 });
             }
 
-            const roleName = user.roles && user.roles[0] && user.roles[0].name || 'user';
+            const roleName = (user.role && user.role.name) ? user.role.name : 'user';
 
             const token = jwt.sign(
                 { id: user._id, role: roleName },

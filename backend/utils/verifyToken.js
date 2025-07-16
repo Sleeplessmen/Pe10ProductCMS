@@ -19,7 +19,12 @@ module.exports = function verifyToken(req) {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (!decoded || !decoded.id) {
+            throw { status: 403, message: 'Token không hợp lệ' };
+        }
+
         return decoded; // Trả payload = { id, role, ... }
     } catch (err) {
         sails.log.error('[verifyToken] JWT error:', err);

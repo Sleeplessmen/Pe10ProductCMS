@@ -1,7 +1,6 @@
 const hasPermission = require('../api/policies/hasPermission');
 
 module.exports.policies = {
-    // Cho phép truy cập tự do cho AuthController (đăng ký, đăng nhập, đăng xuất)
     AuthController: {
         '*': true,
     },
